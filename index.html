@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Do List</title>
+</head>
+<body>
+    
+    <div class="container">
+        <h3 style="color:cornflowerblue">TO DO👩🏻‍💻</h3>
+
+        <div class="grid">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                    <input type="text", id="inputTask" , placeholder="Görev giriniz.">
+                    <select id="taskSelect">
+                        <option value="Görev Seçin"></option>
+                    </select>
+                    </div>
+                    <br>
+                    <button type="button" id="task">Görev Ekle</button>
+                    <br><br>
+
+                    <input type="text", id="inputCategory", placeholder="Kategori giriniz.">
+                    <select id="categorySelect">
+                        <option value="Kategori Seçin"></option>
+                    </select>
+                    <br><br>
+                    <button type="button" id="categorySubmit">Kategori Ekle</button>
+                </div>
+
+                <section class="list-container">
+                    <h2 style="color:cornflowerblue">Görevlerim</h2>
+                    <ul id="taskList"></ul>
+                </section>
+
+                
+                <!--burada filtre özelliği ekledik.-->
+                <div>
+                    <select id="sort">
+                        <option value="">Filtreler</option>
+                    </select>
+                    <br><br>
+                </div>
+            
+                <!--eklenen görevler burada görünecek-->
+                <div id="taskContainer" class="grid-container">
+                    <input value="">
+                    <input type="datetime-local", id="starting">
+                    <input type="datetime-local", id="ending">
+                    <button type="submit", id="update">GÜNCELLE</button>
+                    <button type="reset", id="delete">SİL</button>
+                    <input type="checkbox", id="control">
+                </div>
+    
+            </div>
+            
+        </div>
+    </div>
+    
+
+
+</body>
+</html> 
