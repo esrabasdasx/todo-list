@@ -1,5 +1,0 @@
-- Kullanıcı görev girip görev ekleye tıklarsa kategori seçmeden bu bir --> Hızlı Görev olur.
-- Ancak kategori seçip görev eklerse bu normal bir görev olur.
-JavaScript kısmında bunun fonksiyonu yazılacak.
-
-seçilen tarihe bağlı olarak bunun içinde uyarı ve renklendirme sistemi yapılacak JavaScript kısmında
