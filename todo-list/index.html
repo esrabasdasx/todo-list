@@ -3,64 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To Do List</title>
+    <title>Todo App</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    
+
     <div class="container">
-        <h3 style="color:cornflowerblue">TO DO👩🏻‍💻</h3>
+        <header>
+    <h2>To Do 👩🏻‍💻</h2>
+    <div class="quick-add-container">
+        <form id="quick-add-form">
+            <input type="text" id="add-input" placeholder="Hızlı görev ekle..." required>
+            <br><br>
+            <button type="submit" id="add-input-btn" title="Hızlı Ekle">Görev Ekle</button>
+            <button type="button" id="open-details-btn" class="btn-secondary">Detaylı Görev Ekle</button>
+        </form>
+    </div>
+</header>
 
-        <div class="grid">
-            <div class="card">
-                <div class="card-header">
-                    <div>
-                    <input type="text", id="inputTask" , placeholder="Görev giriniz.">
-                    <select id="taskSelect">
-                        <option value="Görev Seçin"></option>
-                    </select>
-                    </div>
+<dialog id="detailed-modal">
+    <div class="modal-content">
+        <h3>Yeni Detaylı Görev</h3>
+        <hr>
+        <form id="detailed-add-form" method="dialog">
+            <label for="det-title">Görev:</label>
+            <input type="text" id="det-title" placeholder="Ne yapacaksın?" required><br><br>
+
+            <label for="add-category">Kategori:</label>
+            <input type="text" id="add-category" placeholder="Örn: Ödev, Ev"><br><br>
+
+            <div class="date-group">
+                
+                <input id="starting" type="datetime-local" required>
+                <span>-</span>
+                <input id="ending" type="datetime-local" required>
+            </div>
+            <br>
+
+            <div class="modal-actions">
+                <button type="button" id="close-modal-btn">İptal</button>
+                <button type="submit" class="btn-primary">Kaydet</button>
+            </div>
+        </form>
+    </div>
+</dialog>
+        
+
+        <main class="content">
+            <aside class="filters-sidebar">
+                <section class="filter-group">
+                    <h3>Ara ve Filtrele</h3>
+                    <input type="text" id="search-input" placeholder="Görevlerde ara...">
                     <br>
-                    <button type="button" id="task">Görev Ekle</button>
-                    <br><br>
 
-                    <input type="text", id="inputCategory", placeholder="Kategori giriniz.">
-                    <select id="categorySelect">
-                        <option value="Kategori Seçin"></option>
+                    <br>
+                    <label for="category-filter">Kategori</label>
+                    <br>
+                    <select id="category-filter">
+                        <option value=""></option>
+                        <option value="all">Tüm Kategoriler</option>
                     </select>
                     <br><br>
-                    <button type="button" id="categorySubmit">Kategori Ekle</button>
-                </div>
-
-                <section class="list-container">
-                    <h2 style="color:cornflowerblue">Görevlerim</h2>
-                    <ul id="taskList"></ul>
+                    <label for="status-filter">Durum</label>
+                    <br>
+                    <select id="status-filter">
+                        <option value=""></option>
+                        <option value="all">Hepsi</option>
+                        <option value="active">Aktif</option>
+                        <option value="completed">Tamamlanan</option>
+                    </select>
                 </section>
 
-                
-                <!--burada filtre özelliği ekledik.-->
-                <div>
-                    <select id="sort">
-                        <option value="">Filtreler</option>
+                <section class="sort-group">
+                    <h3>Sırala</h3>
+                    <select id="sort-select">
+                        <option value=""></option>
+                        <option value="date-desc">Tarih (Yeni -> Eski)</option>
+                        <option value="date-asc">Tarih (Eski -> Yeni)</option>
+                        <option value="alpha-asc">İsim (A -> Z)</option>
+                        <option value="alpha-desc">İsim (Z -> A)</option>
                     </select>
-                    <br><br>
-                </div>
+                </section>
+            </aside>
+
             
-                <!--eklenen görevler burada görünecek-->
-                <div id="taskContainer" class="grid-container">
-                    <input value="">
-                    <input type="datetime-local", id="starting">
-                    <input type="datetime-local", id="ending">
-                    <button type="submit", id="update">GÜNCELLE</button>
-                    <button type="reset", id="delete">SİL</button>
-                    <input type="checkbox", id="control">
+            <section class="todo-list-container">
+                <div id="todo-list" class="todo-list">
+                    <article class="task-card">
+                        <div class="card-header">
+                            <span class="dc"></span>
+                            <input type="checkbox" id="taskCheck">
+                        </div>
+                        <label for="taskCheck"></label>
+                        <div class="task-footer">
+                            <span class="task-date"></span>
+                            <span class="status-badge"></span>
+                        </div>
+                    </article>
                 </div>
-    
-            </div>
-            
-        </div>
+            </section>
+
+
+        </main>
     </div>
-    
-
-
+    <script src="script.js"></script>
 </body>
-</html> 
+</html>

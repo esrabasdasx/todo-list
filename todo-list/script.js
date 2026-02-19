@@ -10,6 +10,56 @@ const categorySelect = document.querySelector('#categorySelect');
 
 const taskContainer = document.querySelector('#taskList');
 
+
+
+
+const modal = document.querySelector("#detailed-modal");
+const openBtn = document.querySelector("#open-details-btn");
+const closeBtn = document.querySelector("#close-modal-btn");
+
+// Modalı Aç
+openBtn.addEventListener("click", () => {
+    modal.showModal(); 
+});
+
+// Modalı Kapat
+closeBtn.addEventListener("click", () => {
+    modal.close();
+});
+
+
+//Görevlerin kısmı
+const todoForm = document.querySelector("#quick-add-form");
+const todoList = document.querySelector("#todo-list");
+
+todoForm.addEventListener("submit", (e) => {
+    e.preventDefault(); // Sayfanın yenilenmesini engelle
+    
+    const taskValue = document.querySelector("#add-input").value;
+    const categoryValue = document.querySelector("#add-category").value || "Genel";
+
+    // Yeni bir kart oluştur
+    const taskCard = document.createElement("article");
+    taskCard.className = "task-card";
+
+    taskCard.innerHTML = `
+        <div class="card-header">
+            <span class="category-tag">${categoryValue}</span>
+            <input type="checkbox" id="task-${Date.now()}">
+        </div>
+        <label for="task-${Date.now()}" class="task-title">${taskValue}</label>
+        <div class="task-footer">
+            <span class="task-date"> Yeni eklendi</span>
+        </div>
+    `;
+
+    // Listeye ekle
+    todoList.prepend(taskCard); // En başa ekler
+    todoForm.reset(); // Formu temizle
+});
+
+
+
 const taskList = [];
 const categoryList = [];
 
