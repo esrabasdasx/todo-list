@@ -1,3 +1,131 @@
-h3 {
-    font-weight: normal;
+/* ==========================================================================
+   GENEL AYARLAR
+   ========================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
 }
+
+body {
+    background-color: #f0f2f5;
+    padding: 20px;
+    color: #333;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* ==========================================================================
+   HEADER & SIDEBAR
+   ========================================================================== */
+header {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.quick-add-container form {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.content {
+    display: flex;
+    gap: 25px;
+    align-items: flex-start;
+}
+
+.filters-sidebar {
+    flex: 0 0 280px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.input-group { margin-bottom: 15px; }
+.input-group label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 5px; }
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+/* ==========================================================================
+   GÖREV KARTLARI (GRID)
+   ========================================================================== */
+.task-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+    flex: 1;
+}
+
+.task-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    border-top: 6px solid #6c5ce7;
+    transition: transform 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.task-card:hover { transform: translateY(-5px); }
+
+/* --- DURUM RENKLERİ --- */
+
+/* VAKTİ GEÇMİŞ (Kırmızı) */
+.task-card.overdue {
+    background-color: #fff1f0 !important;
+    border-top-color: #ff4d4f !important;
+    border-left: 5px solid #ff4d4f !important;
+}
+
+/* 1 GÜNDEN AZ KALAN (Sarı) */
+.task-card.warning {
+    background-color: #fffbe6 !important;
+    border-top-color: #faad14 !important;
+    border-left: 5px solid #faad14 !important;
+}
+
+/* TAMAMLANMIŞ (Yeşil/Soluk) */
+.task-card.completed-card {
+    background-color: #f6ffed !important;
+    border-top-color: #52c41a !important;
+    opacity: 0.8;
+}
+
+.completed-text { text-decoration: line-through; color: #888; }
+
+/* ==========================================================================
+   DİALOG & BUTONLAR
+   ========================================================================== */
+dialog {
+    border: none;
+    border-radius: 15px;
+    padding: 25px;
+    width: 450px;
+    margin: auto;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+dialog::backdrop { background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); }
+
+.card-actions { display: flex; gap: 8px; margin-top: 10px; }
+.edit-btn { background: #e3f2fd; color: #1976d2; flex: 1; border: none; padding: 8px; border-radius: 5px; cursor: pointer; }
+.delete-btn { background: #ffebee; color: #d32f2f; flex: 1; border: none; padding: 8px; border-radius: 5px; cursor: pointer; }
+.btn-primary { background: #6c5ce7; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; }

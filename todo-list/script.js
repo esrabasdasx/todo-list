@@ -1,180 +1,131 @@
-const inputTask = document.querySelector('#inputTask');
-const inputCategory = document.querySelector('#inputCategory');
+// 1. VERİ YÖNETİMİ
+let tasks = JSON.parse(localStorage.getItem("todoTasks")) || [];
+let editIndex = null;
 
-const addTaskBtn = document.querySelector('#task');
-const categoryBtn = document.querySelector('#categorySubmit');
-
-const taskSelect = document.querySelector('#taskSelect');
-const categorySelect = document.querySelector('#categorySelect');
-
-
-const taskContainer = document.querySelector('#taskList');
-
-
-
-
-const modal = document.querySelector("#detailed-modal");
-const openBtn = document.querySelector("#open-details-btn");
-const closeBtn = document.querySelector("#close-modal-btn");
-
-// Modalı Aç
-openBtn.addEventListener("click", () => {
-    modal.showModal(); 
-});
-
-// Modalı Kapat
-closeBtn.addEventListener("click", () => {
-    modal.close();
-});
-
-
-//Görevlerin kısmı
-const todoForm = document.querySelector("#quick-add-form");
+// 2. ELEMENTLER
 const todoList = document.querySelector("#todo-list");
+const quickForm = document.querySelector("#quick-add-form");
+const detailedForm = document.querySelector("#detailed-add-form");
+const modal = document.querySelector("#detailed-modal");
 
-todoForm.addEventListener("submit", (e) => {
-    e.preventDefault(); // Sayfanın yenilenmesini engelle
-    
-    const taskValue = document.querySelector("#add-input").value;
-    const categoryValue = document.querySelector("#add-category").value || "Genel";
+// 3. MODAL AÇ/KAPAT
+document.querySelector("#open-details-btn").onclick = () => {
+    editIndex = null;
+    detailedForm.reset();
+    document.querySelector("#modal-title").innerText = "Yeni Detaylı Görev";
+    modal.showModal();
+};
+document.querySelector("#close-modal-btn").onclick = () => modal.close();
 
-    // Yeni bir kart oluştur
-    const taskCard = document.createElement("article");
-    taskCard.className = "task-card";
+// 4. ANA RENDER FONKSİYONU
+function renderTasks() {
+    const searchVal = document.querySelector("#search-input").value.toLowerCase();
+    const statusFilter = document.querySelector("#status-filter").value;
+    const sortVal = document.querySelector("#sort-select").value;
 
-    taskCard.innerHTML = `
-        <div class="card-header">
-            <span class="category-tag">${categoryValue}</span>
-            <input type="checkbox" id="task-${Date.now()}">
-        </div>
-        <label for="task-${Date.now()}" class="task-title">${taskValue}</label>
-        <div class="task-footer">
-            <span class="task-date"> Yeni eklendi</span>
-        </div>
-    `;
-
-    // Listeye ekle
-    todoList.prepend(taskCard); // En başa ekler
-    todoForm.reset(); // Formu temizle
-});
-
-
-
-const taskList = [];
-const categoryList = [];
-
-// Görev ekleme butonu için kullanılan fonksiyon
-addTaskBtn.addEventListener('click', function(e) {
-
-    e.preventDefault();
-
-    const taskName = inputTask.value.trim();
-    
-    const selectedCategory = taskSelect.value;
-
-    const startDate = document.querySelector('#starting').value;
-    const endDate = document.querySelector('#ending').value;
-
-
-    if(taskName === ""){
-        alert("Lütfen bir görev giriniz.");
-        return;
-    }
-    const isQuickTask = (selectedCategory === "" || selectedCategory === "Görev Seçin"); 
-    const newTask = {
-        id: Date.now(),
-        text: taskName,
-        category: isQuickTask ? "Hızlı Görev" : selectedCategory, // Kategori yoksa isimlendirelim
-        genre: isQuickTask ? "hizli" : "normal", 
-        completed: false,
-        addition: new Date(),
-        start: startDate || null,
-        end: endDate || null
-    };
-    taskList.push(newTask);
-    render();
-    inputTask.value = "";
-    document.querySelector('#starting').value = " ";
-    document.querySelector('#ending').value = " ";
-    
-});
-
-//Kategori ekleme işlemi için kullanılan buton 
-categoryBtn.addEventListener('click', function(e) {
-    e.preventDefault();
-
-    const categoryName = inputCategory.value.trim();
-
-    if(categoryName === ""){
-        alert("Lütfen bir kategori giriniz");
-    }else if(categoryList.includes(categoryName)){
-        alert("Bu kategori zaten mevcut");
-    }else{
-        categoryList.push(categoryName);
-        updateMenus();
-        saveToLocalStorage();
-        inputCategory.value = "";
-    }
-});
-
-//Eklenen kategoriler ve görevlerin LocalStorage kısmından alınması için gerekli
-function loadFromLocalStorage() {
-    const savedCategories = localStorage.getItem('myCategories');
-    const savedTasks = localStorage.getItem('myTasks');
-
-    if (savedCategories) {
-        categoryList.push(...JSON.parse(savedCategories));
-        updateMenus();
-    }
-    
-    if (savedTasks) {
-        taskList.push(...JSON.parse(savedTasks));
-        render();
-    }
-}
-
-//LocalStorage içine verileri gönder.
-function saveToLocalStorage(){
-    localStorage.setItem('myCategories', JSON.stringify(categoryList));
-    localStorage.setItem('myTask',JSON.stringify(taskList));
-
-}
-
-//Kategoriler ve görevler kısmını güncellemeyi sağlar.
-function updateMenus(){
-    taskSelect.innerHTML = '<option value="">Kategori Ata</option>';
-    categorySelect.innerHTML = '<option value="">Mevcut Kategoriler</option>';
-
-    categoryList.forEach(cat => {
-        const option = document.createElement('option');
-        option.value = cat;
-        option.textContent = cat;
-
-        categorySelect.appendChild(option);
-        taskSelect.appendChild(option.cloneNode(true));
+    let filtered = tasks.filter(t => {
+        const matchesSearch = t.title.toLowerCase().includes(searchVal);
+        const matchesStatus = statusFilter === "all" || 
+                             (statusFilter === "active" && !t.completed) || 
+                             (statusFilter === "completed" && t.completed);
+        return matchesSearch && matchesStatus;
     });
 
-}
+    // SIRALAMA
+    filtered.sort((a, b) => {
+        if (sortVal === "alpha-asc") return a.title.localeCompare(b.title);
+        if (sortVal === "date-asc") return new Date(a.endDate) - new Date(b.endDate);
+        if (sortVal === "date-desc") return new Date(b.endDate) - new Date(a.endDate);
+        return 0;
+    });
 
-//Kullanıcı tarafından girilen görevler buraya aktarılır, liste şeklinde görünür.
-function render(){
-    taskContainer.innerHTML = "";
-
-    taskList.forEach(task => {
-        const li = document.createElement('li');    //Her görev için bir liste elemanı oluşturuluyor.
-
-        li.innerHTML = `
-            <input type="checkbox" ${task.completed ? 'checked' : ''}>
-            <span>${task.text}</span>
-            <small>(${task.category})</small>
-            <button class="delete-btn">Sil</button>
+    todoList.innerHTML = "";
+    filtered.forEach(task => {
+        const realIdx = tasks.indexOf(task);
+        const statusClass = getStatusClass(task.endDate, task.completed);
+        
+        const card = document.createElement("article");
+        card.className = `task-card ${statusClass}`;
+        card.innerHTML = `
+            <div class="card-header">
+                <span class="category-badge">${task.category || 'Genel'}</span>
+                <input type="checkbox" id="check-${realIdx}" ${task.completed ? "checked" : ""} onchange="toggleTask(${realIdx})">
+            </div>
+            <label for="check-${realIdx}" class="task-title ${task.completed ? 'completed-text' : ''}">${task.title}</label>
+            <div class="task-info">
+                <small><b>Başlangıç:</b> ${task.startDate || '-'}</small><br>
+                <small><b>Bitiş:</b> ${task.endDate || '-'}</small>
+            </div>
+            <div class="card-actions">
+                <button onclick="openEditModal(${realIdx})" class="edit-btn">Güncelle</button>
+                <button onclick="deleteTask(${realIdx})" class="delete-btn">Sil</button>
+            </div>
         `;
-        if(task.genre == "hizli"){
-            li.style.borderLeft = "5px solid yellow";
-        }
-        taskContainer.appendChild(li);        
-    });   
+        todoList.appendChild(card);
+    });
+    localStorage.setItem("todoTasks", JSON.stringify(tasks));
 }
 
+// 5. YARDIMCI FONKSİYONLAR
+function getStatusClass(endDate, isCompleted) {
+    if (isCompleted) return "completed-card";
+    if (!endDate) return "";
+    const now = new Date();
+    const end = new Date(endDate);
+    const diffDays = (end - now) / (1000 * 60 * 60 * 24);
+    if (end < now) return "overdue"; // KIRMIZI
+    if (diffDays <= 1) return "warning"; // SARI
+    return "";
+}
 
+window.toggleTask = (i) => { tasks[i].completed = !tasks[i].completed; renderTasks(); };
+window.deleteTask = (i) => { if(confirm("Silinsin mi?")) { tasks.splice(i, 1); renderTasks(); }};
 
+window.openEditModal = (i) => {
+    editIndex = i;
+    const t = tasks[i];
+    document.querySelector("#det-title").value = t.title;
+    document.querySelector("#det-category").value = t.category;
+    document.querySelector("#det-starting").value = t.startDate;
+    document.querySelector("#det-ending").value = t.endDate;
+    document.querySelector("#modal-title").innerText = "Görevi Güncelle";
+    modal.showModal();
+};
+
+// 6. FORM GÖNDERME & TARİH DOĞRULAMA
+detailedForm.onsubmit = (e) => {
+    e.preventDefault();
+    const start = document.querySelector("#det-starting").value;
+    const end = document.querySelector("#det-ending").value;
+
+    // --- KRİTİK TARİH KONTROLÜ ---
+    if (start && end && new Date(end) < new Date(start)) {
+        alert("Hata: Bitiş tarihi başlangıçtan önce olamaz!");
+        return;
+    }
+
+    const data = {
+        title: document.querySelector("#det-title").value,
+        category: document.querySelector("#det-category").value || "Genel",
+        startDate: start,
+        endDate: end,
+        completed: editIndex !== null ? tasks[editIndex].completed : false
+    };
+
+    if (editIndex !== null) tasks[editIndex] = data;
+    else tasks.push(data);
+
+    modal.close();
+    renderTasks();
+};
+
+// Hızlı ekleme
+quickForm.onsubmit = (e) => {
+    e.preventDefault();
+    tasks.push({ title: document.querySelector("#add-input").value, category: "Genel", completed: false });
+    document.querySelector("#add-input").value = "";
+    renderTasks();
+};
+
+// İlk yükleme
+renderTasks();
