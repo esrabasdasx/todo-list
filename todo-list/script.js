@@ -60,6 +60,10 @@ function renderTasks() {
 
     // Sıralama
     filtered.sort((a, b) => {
+        if(a.completed !== b.completed){
+            return a.completed ? 1 : -1;
+        }
+            
         if (sortVal === "alpha-asc") return a.title.localeCompare(b.title, 'tr');
         if (sortVal === "alpha-desc") return b.title.localeCompare(a.title, 'tr');
 
@@ -187,6 +191,22 @@ quickForm.onsubmit = (e) => {
     renderTasks();
 };
 
+function updateCategorySuggestions() {
+    const datalist = document.querySelector("#category-suggestions");
+    //benzersiz kategorileri alıp aynı kategorilerin yeniden gelmesi emgeller.
+    const categories = [...new Set(tasks.map(t => t.category).filter(c => c))];
+    
+    datalist.innerHTML = ""; 
+    categories.forEach(cat => {
+        const option = document.createElement("option");
+        option.value = cat;
+        datalist.appendChild(option);
+    });
+}
+
+// Bu fonksiyonu renderTasks() fonksiyonunun en sonunda çağırmayı unutma:
+
+
 // Filtre kısmının çalışması için
 searchInput.addEventListener("input", renderTasks);
 categoryFilter.addEventListener("change", renderTasks);
@@ -195,4 +215,6 @@ sortSelect.addEventListener("change", renderTasks);
 
 // Kategoriler ve çalışması için gereken fonksiyonu çağırıyoruz
 updateCategoryDropdown();
+updateCategorySuggestions();
 renderTasks();
+
